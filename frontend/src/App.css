@@ -128,3 +128,9 @@ body{
 }
 
 /* Git debugging errors */
+
+/*Bootstrap overload css*/
+.text-muted{
+  color:blue !important;
+  /* text-decoration: italic !important; */
+}
