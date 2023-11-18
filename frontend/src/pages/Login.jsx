@@ -31,6 +31,8 @@ const customFontClass = 'custom-font'
 
 
 export default function LogIn() {
+  const [email, setEmail] = React.useState('');
+  const [password, setPassword] = React.useState('');
   const navigate = useNavigate()
 
 
@@ -38,17 +40,19 @@ export default function LogIn() {
     event.preventDefault() 
     const data = new FormData(event.currentTarget) 
     // console.log(data.get('email'))
-    const response = axios.post(`/back-end-route`, {
-      /* email: data.get('email'),
-      password: data.get('password') */
+    const response = axios.post(`/user/login`, {
+      userName : email,
+      password : password
     })
 
     response.then(result => {
       const { data } = result
       if(data!=null){  
-        // Cookies.set("currentUserForHotelApp", JSON.stringify(data), { expires: 1 });
+        Cookies.set("userEmailApp", JSON.stringify(data), { expires: 1 });  // expires in one day
     }
-      // role based navigation comes here in the form of navigate hook (navigate('/route'))
+      if (data.role === "admin" && data.token){
+        navigate('/user/admin/home');
+      }
     })
       .catch(error => {
         alert('Something went wrong, Try again!!!')
@@ -88,6 +92,10 @@ export default function LogIn() {
                   name="email"
                   autoComplete="email"
                   autoFocus
+                  value={email}
+                  onChange={(e) => {
+                    setEmail(e.target.value);
+                  }}
                 />
                 <TextField
                   margin="normal"
@@ -98,6 +106,10 @@ export default function LogIn() {
                   type="password"
                   id="password"
                   autoComplete="current-password"
+                  value={password}
+                  onChange={(e) => {
+                    setPassword(e.target.value);
+                  }}
                 />
                 <Button
                   type="submit"
