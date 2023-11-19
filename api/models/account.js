@@ -23,6 +23,10 @@ const acoountSchema = new mongoose.Schema({
     balance:{
         type: Number,
         required : true
+    },
+    isActive:{
+        type: Number,
+        required:true
     }
 
 },{

@@ -39,7 +39,7 @@ const createAccount = async (req, res) => {
 
             // File upload was successful
             // Extract data from the request body
-            const { name, cnic, username, password, images } = req.body;
+            const { name, cnic, username, password,balance, images } = req.body;
 
             /* console.log(req.body) */
 
@@ -53,7 +53,9 @@ const createAccount = async (req, res) => {
                 cnic,
                 username,
                 password : crypto.createHash("sha256").update(password).digest("hex"),
-                cnicimages: imagePaths, // Add the profile image to the cnicimages array
+                cnicimages: imagePaths, // Add the profile image to the cnicimages array,
+                isActive:1,
+                balance
             });
             // Save the account to the database
             const savedAccount = await newAccount.save();
@@ -79,7 +81,16 @@ const createAccount = async (req, res) => {
 
 const getAllAccounts = async (req,res) => {
     try {
-        res.status(202).json(await Account.find({}));
+
+        let accounts = await Account.find({});
+
+        if (!accounts || !accounts[0]) return res.status(404).send('No account exists.');
+
+
+        /* Check for deleted accounts. */
+        accounts = accounts.filter((account) => account.isActive !== 0);
+
+        res.status(202).json(accounts);
     } catch (error) {
         res.status(500).json({"message" : error.message})
     }
@@ -149,4 +160,52 @@ const updateAccount = async(req, res) => {
     }
 }
 
-module.exports = {createAccount, getAllAccounts, getOneAccount, updateAccount}
+const deleteAccount = async(req, res)=>{
+    try{
+
+        /* console.log(req.body) */
+        const accountId = req.body._id;
+        // console.log(accountId)
+        const account = await Account.findOne({_id : accountId});
+
+        /* console.log(account) */
+
+        if (!account){
+            res.status(404).json({ error : 'Account not existent.'});
+        }
+
+        const accountBefore = {
+            name : account.name,
+            cnic : account.cnic,
+            balance : account.balance,
+            isActiveBefore : 1
+        }
+
+        
+        account.isActive = 0;    // inactivate the account
+        
+        await account.save();
+
+
+        const accountAfter = {
+            name : account.name,
+            cnic : account.cnic,
+            balance : account.balance,
+            isActiveAfter : 0
+        }
+
+        const audit = new AccountAudit({
+            AccountId : accountId,
+            AccountBefore : accountBefore,
+            AccountAfter : accountAfter
+        })
+
+        await audit.save();
+
+        res.status(204).json({ stts: "Delete successfull"});
+    }catch(err){ 
+        res.status(500);
+    }
+}
+
+module.exports = {createAccount, getAllAccounts, getOneAccount, updateAccount, deleteAccount}

@@ -11,6 +11,7 @@ router.get('/', middleware.requireRoles(['admin']), controller.getAllAccounts);
 router.get('/:id', middleware.requireRoles(['admin', 'user']), controller.getOneAccount);
 
 router.post('/update', middleware.requireRoles(['admin']), controller.updateAccount);
+router.post('/delete', middleware.requireRoles(["admin"]), controller.deleteAccount);
 
 
 

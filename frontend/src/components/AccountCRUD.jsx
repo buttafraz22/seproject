@@ -38,8 +38,14 @@ const AccountCreationModal = ({ showModal, handleClose }) => {
         }
       }
 
+      const userDetails = JSON.parse(Cookies.get('userBankingApp'));
+
+      const config = {
+        headers: { Authorization: `Bearer ${userDetails.token}` },
+      };
+
       // Make a fetch request to send the data to the backend
-      const response = await axios.post('http://localhost:3005/account', formData);
+      const response = await axios.post('http://localhost:3005/account', formData, config);
       if (response.status === 201) {
         console.log('Account created successfully');
         resetStates();
@@ -215,10 +221,36 @@ const AccountTable = () => {
     );
   };
 
-  const handleDeleteAccount = (id) => {
+  const handleDeleteAccount = async (id) => {
     // Implement your delete account logic here (e.g., send delete request to the backend)
-    console.log('Deleting account:', id);
-    setAccounts((prevAccounts) => prevAccounts.filter((account) => account._id !== id));
+    const userDetails = JSON.parse(Cookies.get('userBankingApp'));
+
+    const config = {
+      headers: { Authorization: `Bearer ${userDetails.token}` },
+    };
+
+    /* const accountToBeEdited = accounts.filter((account) => account._id === id);
+    console.log(accountToBeEdited) */
+
+    
+    const bodyParameters = {
+      _id: id
+    }
+    const response = await axios.post('http://localhost:3005/account/delete', bodyParameters, config);
+  
+    getDataFromBackend();
+    
+    /* console.log('Updating account:', id, updatedData); */
+
+    // Reset the edit mode
+    setEditMode(null);
+    setUpdatedData({});
+
+    setAccounts((prevAccounts) =>
+      prevAccounts.map((account) =>
+        account._id === id ? { ...account, ...updatedData } : account
+      )
+    );
   };
 
   const handleEditChange = (key, value) => {
@@ -302,7 +334,6 @@ const AccountTable = () => {
     </Table>
   );
 };
-
 const AccountCRUD = () => {
   const [showModal, setShowModal] = useState(false);
 
