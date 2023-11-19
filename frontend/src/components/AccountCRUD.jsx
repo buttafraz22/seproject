@@ -341,7 +341,7 @@ const AccountCRUD = () => {
   const handleClose = () => setShowModal(false);
 
   return (
-    <Container>
+    <Container className='bs mt-5'>
         <h1 className='mt-2 mb-2 p-1'>Account Management</h1>
       <Row>
         <Col>

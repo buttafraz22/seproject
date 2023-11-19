@@ -1,4 +1,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500&family=Roboto:ital,wght@1,100&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500&family=Roboto:ital,wght@1,100&family=Rubik:wght@500&display=swap');
+
 /*body styling*/
 body{
   font-family: 'Poppins',system-ui,-apple-system,Arial, Helvetica, sans-serif !important;
@@ -127,10 +129,18 @@ body{
   margin-right: auto !important;
 }
 
-/* Git debugging errors */
+/* Box shadows */
+.bs{
+  box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 12px !important;
+}
 
 /*Bootstrap overload css*/
 .text-muted{
   color:blue !important;
   /* text-decoration: italic !important; */
+}
+
+/*Admin panel landing page*/
+.landing{
+  font-family: 'Rubik', sans-serif !important;
 }
