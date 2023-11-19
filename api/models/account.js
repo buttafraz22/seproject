@@ -5,10 +5,6 @@ const acoountSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    password:{
-        type: String,
-        required: true
-    },
     cnic:{
         type:Number,
         required:true,
@@ -23,6 +19,10 @@ const acoountSchema = new mongoose.Schema({
     password:{
         type:String,
         required: true,
+    },
+    balance:{
+        type: Number,
+        required : true
     }
 
 },{

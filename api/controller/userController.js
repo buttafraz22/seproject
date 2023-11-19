@@ -3,6 +3,8 @@ const crypto = require("crypto");
 const UserAudit = require("../models/userAudit");
 const jwt = require('jsonwebtoken'); // Import the jwt library
 
+
+/* CRUD Operations */
 async function createUser(req, res) {
   try {
     const userName = req.body.userName;
@@ -47,6 +49,7 @@ async function getUser(req, res) {
   }
 }
 
+
 async function updateUser(req, res) {
   try {
     const userId = req.body.id;
@@ -56,6 +59,8 @@ async function updateUser(req, res) {
     if (!user) {
       return res.status(404).json({ error: "User not found." });
     }
+
+    /* Make an audit object for logging all db changes. */
 
     const userBefore = {
       "username_before" : user.userName,
@@ -93,6 +98,8 @@ async function deleteUser(req, res) {
     const userId = req.body.id;
 
     const user = await User.findById({_id:userId});
+
+    /* Make an audit object for logging all db changes. */
 
     const userBefore = {
       "username_before" : user.userName,
@@ -153,16 +160,12 @@ const login = async(req, res) => {
 
 };
 
-
 /* Helping functions */
 const GenerateToken = (user) => {
 
   const payload = {
-
       role: user.role,
-
       id: user._id,
-
   };
 
   const SECRET_KEY = 'IWTGO26f2003';

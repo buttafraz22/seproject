@@ -48,7 +48,7 @@ export default function LogIn() {
     response.then(result => {
       const { data } = result
       if(data!=null){  
-        Cookies.set("userEmailApp", JSON.stringify(data), { expires: 1 });  // expires in one day
+        Cookies.set("userBankingApp", JSON.stringify(data), { expires: 1 });  // expires in one day
     }
       if (data.role === "admin" && data.token){
         navigate('/user/admin/home');

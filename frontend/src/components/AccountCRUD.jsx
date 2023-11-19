@@ -1,29 +1,67 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Button, Modal, Table, Form, Container, Row, Col } from 'react-bootstrap';
+import axios from 'axios';
+import Cookies from 'js-cookie';
 
 const AccountCreationModal = ({ showModal, handleClose }) => {
-  const [accountData, setAccountData] = useState({
-    name: '',
-    cnic: '',
-    username: '',
-    password:''
-  });
+  const [name, setName] = useState('');
+  const [cnic, setCnic] = useState('');
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+  const [images, setImages] = useState(null);
+  const [balance, setBalance] = useState(0);
 
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setAccountData((prevData) => ({ ...prevData, [name]: value }));
+  const resetStates = () => {
+    setName('');
+    setCnic('');
+    setUsername('');
+    setPassword('');
+    setImages(null);
+    setBalance(0);
+  }
+
+  const handleCreateAccount = async (e) => {
+    e.preventDefault();
+
+    try {
+      const formData = new FormData();
+      formData.append('name', name);
+      formData.append('cnic', cnic);
+      formData.append('username', username);
+      formData.append('password', password);
+      formData.append('balance' , balance)
+
+      // Append each selected image to  the FormData
+      if (images) {
+        for (let i = 0; i < images.length; i++) {
+          formData.append('images', images[i]);
+        }
+      }
+
+      // Make a fetch request to send the data to the backend
+      const response = await axios.post('http://localhost:3005/account', formData);
+      if (response.status === 201) {
+        console.log('Account created successfully');
+        resetStates();
+        handleClose(); // Close the modal after creating an account
+      } else {
+        console.error('Error creating account');
+      }
+    } catch (error) {
+      console.error('Error creating account:', error.message);
+    }
   };
 
-  const handleCreateAccount = () => {
-    // Implement your create account logic here
-    console.log('Creating account:', accountData);
-    handleClose(); // Close the modal after creating an account
-  };
   const handleGeneratePassword = () => {
     // Implement your password generation logic here (replace with a secure method in production)
     const PASSWORD_LENGTH = 14;
     const generatedPassword = Math.random().toString(36).substring(7);
-    setAccountData((prevData) => ({ ...prevData, password: generatedPassword }));
+    setPassword(generatedPassword);
+  };
+
+  const handleFileChange = (e) => {
+    const files = e.target.files;
+    setImages(files);
   };
 
   return (
@@ -32,15 +70,14 @@ const AccountCreationModal = ({ showModal, handleClose }) => {
         <Modal.Title>Create Account</Modal.Title>
       </Modal.Header>
       <Modal.Body>
-        <Form action='http://localhost:5000/'encType='multipart/form-data'>
+        <Form encType='multipart/form-data' onSubmit={handleCreateAccount}>
           <Form.Group controlId="formName">
             <Form.Label>Name</Form.Label>
             <Form.Control
               type="text"
               placeholder="Enter name"
-              name="name"
-              value={accountData.name}
-              onChange={handleInputChange}
+              value={name}
+              onChange={(e) => setName(e.target.value)}
             />
           </Form.Group>
           <Form.Group controlId="formCNIC">
@@ -48,9 +85,8 @@ const AccountCreationModal = ({ showModal, handleClose }) => {
             <Form.Control
               type="text"
               placeholder="Enter CNIC"
-              name="cnic"
-              value={accountData.cnic}
-              onChange={handleInputChange}
+              value={cnic}
+              onChange={(e) => setCnic(e.target.value)}
             />
           </Form.Group>
           <Form.Group controlId="formUsername">
@@ -58,9 +94,8 @@ const AccountCreationModal = ({ showModal, handleClose }) => {
             <Form.Control
               type="text"
               placeholder="Enter username"
-              name="username"
-              value={accountData.username}
-              onChange={handleInputChange}
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
             />
           </Form.Group>
           <Form.Group controlId="formPassword">
@@ -69,8 +104,7 @@ const AccountCreationModal = ({ showModal, handleClose }) => {
               <Form.Control
                 type="text"
                 className="form-control"
-                id="password"
-                value={accountData.password}
+                value={password}
                 readOnly
               />
               <Button variant="primary" onClick={handleGeneratePassword}>
@@ -80,121 +114,183 @@ const AccountCreationModal = ({ showModal, handleClose }) => {
             <small className="text-muted">Password will be autogenerated.</small>
           </Form.Group>
           {/* Add upload images fields */}
-          <Form.Group controlId="formUsername">
+          <Form.Group controlId="formImages">
             <Form.Label>Images</Form.Label>
             <Form.Control
               type="file"
-              placeholder="Enter username"
-              name="image-cnic"
+              placeholder="Select images"
+              name="images"
               multiple
               accept='image/*'
+              onChange={handleFileChange}
             />
           </Form.Group>
+          <Form.Group controlId="formBalance">
+            <Form.Label>Balance</Form.Label>
+            <Form.Control
+              type="number"
+              placeholder="Enter balance"
+              name="balance"
+              value={balance}
+              onChange={(e)=>{
+                setBalance(e.target.value)
+              }}
+            />
+          </Form.Group>
+          <Modal.Footer>
+            <Button variant="secondary" onClick={handleClose}>
+              Close
+            </Button>
+            <Button variant="primary" type='submit'>
+              Create Account
+            </Button>
+          </Modal.Footer>
         </Form>
       </Modal.Body>
-      <Modal.Footer>
-        <Button variant="secondary" onClick={handleClose}>
-          Close
-        </Button>
-        <Button variant="primary" onClick={handleCreateAccount}>
-          Create Account
-        </Button>
-      </Modal.Footer>
     </Modal>
   );
 };
 
 const AccountTable = () => {
-  const [accounts, setAccounts] = useState([
-    { id: 1, name: 'John Doe', cnic: '1234567890123', username: 'john_doe', password: '5uj66' },
-    // Add more accounts as needed
-  ]);
+  const [accounts, setAccounts] = useState([]);
+  const [editMode, setEditMode] = useState(null);
+  const [updatedData, setUpdatedData] = useState({});
+  const [toUpdateAccount, setToUpdateAccount] = useState(null);
 
-  const [editMode, setEditMode] = useState(null); // Track the currently edited account ID
-  const [updatedName, setUpdatedName] = useState('');
+  const getDataFromBackend = async () => {
+    try {
+      const userDetails = JSON.parse(Cookies.get('userBankingApp'));
 
-  const handleUpdateAccount = (id) => {
-    // Implement your update account logic here (e.g., send data to the backend)
-    console.log('Updating account:', id, updatedName);
+      const config = {
+        headers: { Authorization: `Bearer ${userDetails.token}` },
+      };
+      const bodyParameters = {};
+
+      const response = await axios.get(`/account`, config);
+
+      if (response.data) {
+        setAccounts(response.data);
+      }
+    } catch (err) {
+      alert(err.message);
+    }
+  };
+
+  useEffect(() => {
+    getDataFromBackend();
+  }, []);
+
+
+  const handleUpdateAccount = async(id) => {
+    const userDetails = JSON.parse(Cookies.get('userBankingApp'));
+
+    const config = {
+      headers: { Authorization: `Bearer ${userDetails.token}` },
+    };
+
+    /* const accountToBeEdited = accounts.filter((account) => account._id === id);
+    console.log(accountToBeEdited) */
+
+    if(toUpdateAccount){
+      const bodyParameters = {
+        _id: id,
+        name: toUpdateAccount.name,
+        cnic: toUpdateAccount.cnic,
+        balance: toUpdateAccount.balance,
+      };
+      const response = await axios.post('http://localhost:3005/account/update', bodyParameters, config);
+    
+      getDataFromBackend();
+    }
+    /* console.log('Updating account:', id, updatedData); */
 
     // Reset the edit mode
     setEditMode(null);
+    setUpdatedData({});
 
     setAccounts((prevAccounts) =>
-      prevAccounts.map((account) => (account.id === id ? { ...account, name: updatedName } : account))
+      prevAccounts.map((account) =>
+        account._id === id ? { ...account, ...updatedData } : account
+      )
     );
   };
 
   const handleDeleteAccount = (id) => {
     // Implement your delete account logic here (e.g., send delete request to the backend)
     console.log('Deleting account:', id);
-    setAccounts((prevAccounts) => prevAccounts.filter((account) => account.id !== id));
+    setAccounts((prevAccounts) => prevAccounts.filter((account) => account._id !== id));
   };
+
+  const handleEditChange = (key, value) => {
+    // Update the corresponding property in toUpdateAccount
+    setToUpdateAccount((prevData) => ({ ...prevData, [key]: value }));
+  };
+
+  // Function to handle clicking the "Edit" button
+  const handleEditClick = (id) => {
+    // Find the account with the given id
+    const accountToEdit = accounts.find((account) => account._id === id);
+
+    // Set toUpdateAccount state to the account data
+    setToUpdateAccount(accountToEdit);
+
+    // Set the edit mode
+    setEditMode(id);
+  };
+
+  // Function to handle clicking the "Cancel" button
+  const handleCancelClick = () => {
+    // Reset state variables
+    setEditMode(null);
+    setUpdatedData({});
+    setToUpdateAccount(null);
+  };
+
+  // Define the columns to display (excluding 'id' and 'password')
+  const columnsToDisplay = ['name', 'cnic', 'username', 'balance'];
 
   return (
     <Table striped bordered hover responsive>
       <thead>
         <tr>
-          <th>Name</th>
-          <th>CNIC</th>
-          <th>Username</th>
+          {columnsToDisplay.map((column) => (
+            <th key={column}>{column.charAt(0).toUpperCase() + column.slice(1)}</th>
+          ))}
           <th>Actions</th>
         </tr>
       </thead>
       <tbody>
         {accounts.map((account) => (
-          <tr key={account.id}>
+          <tr key={account._id}>
+            {columnsToDisplay.map((key) => (
+              <td key={key}>
+                {editMode === account._id ? (
+                  <Form.Control
+                    type="text"
+                    value={toUpdateAccount ? toUpdateAccount[key] : ''}
+                    onChange={(e) => handleEditChange(key, e.target.value)}
+                  />
+                ) : (
+                  account[key]
+                )}
+              </td>
+            ))}
             <td>
-              {editMode === account.id ? (
-                <Form.Control
-                  type="text"
-                  value={updatedName}
-                  onChange={(e) => setUpdatedName(e.target.value)}
-                />
-              ) : (
-                account.name
-              )}
-            </td>
-            <td>{account.cnic}</td>
-            <td>{account.username}</td>
-            <td>
-              {editMode === account.id ? (
+              {editMode === account._id ? (
                 <div>
-                  <Button
-                    variant="success"
-                    size="sm"
-                    onClick={() => handleUpdateAccount(account.id)}
-                  >
+                  <Button variant="success" size="sm" onClick={() => handleUpdateAccount(account._id)}>
                     Save
                   </Button>{' '}
-                  <Button
-                    variant="secondary"
-                    size="sm"
-                    onClick={() => {
-                      setEditMode(null);
-                      setUpdatedName('');
-                    }}
-                  >
+                  <Button variant="secondary" size="sm" onClick={handleCancelClick}>
                     Cancel
                   </Button>
                 </div>
               ) : (
                 <div>
-                  <Button
-                    variant="primary"
-                    size="sm"
-                    onClick={() => {
-                      setEditMode(account.id);
-                      setUpdatedName(account.name);
-                    }}
-                  >
+                  <Button variant="primary" size="sm" onClick={() => handleEditClick(account._id)}>
                     Edit
                   </Button>{' '}
-                  <Button
-                    variant="danger"
-                    size="sm"
-                    onClick={() => handleDeleteAccount(account.id)}
-                  >
+                  <Button variant="danger" size="sm" onClick={() => handleDeleteAccount(account._id)}>
                     Delete
                   </Button>
                 </div>
