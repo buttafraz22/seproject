@@ -12,6 +12,7 @@ import { createTheme, ThemeProvider } from '@mui/material/styles'
 import axios from 'axios'
 import { useNavigate } from 'react-router-dom'
 import Cookies from 'js-cookie';
+import routesPaths from '../router-config/routes-paths'
 
 function Copyright(props) {
   return (
@@ -51,7 +52,9 @@ export default function LogIn() {
         Cookies.set("userBankingApp", JSON.stringify(data), { expires: 1 });  // expires in one day
     }
       if (data.role === "admin" && data.token){
-        navigate('/user/admin/home');
+        navigate(routesPaths.adminHome);
+      }else if(data.role === "user" && data.token){
+        navigate(routesPaths.userHome)
       }
     })
       .catch(error => {

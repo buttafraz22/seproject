@@ -10,6 +10,7 @@ import Bills from './pages/bills'
 import TransactionPage from './pages/TransactionPage'
 import AdminHome from './pages/AdminHome'
 import AdminAccountCRUD from './pages/AdminAccountCRUD'
+import ExchangeRates from './pages/ExchangeRates'
 
 function App() {
   return (
@@ -25,6 +26,7 @@ function App() {
         <Route exact path={routes.transactionHistory} element={<TransactionPage />}/>
         <Route exact path={routes.adminHome} element={<AdminHome />}/>
         <Route exact path={routes.accountCRUD} element={<AdminAccountCRUD />}/>
+        <Route exact path={routes.exchangeRates} element={<ExchangeRates />}/>
       </Routes>
     </Router>
     </>

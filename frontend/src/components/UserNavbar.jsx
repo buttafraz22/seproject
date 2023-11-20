@@ -1,6 +1,7 @@
 import React from 'react'
 import LogoFinal from '../assets/logo-final.png'
 import routes from '../router-config/routes-paths'
+import { Link } from 'react-router-dom'
 
 export default function UserNavbar() {
     return (
@@ -17,18 +18,26 @@ export default function UserNavbar() {
                                     <a className="nav-link" href={routes.userHome}>Home</a>
                                 </li> 
                                 <li className="nav-item">
-                                    <a className="nav-link" href="#">Payments History</a>
+                                    <a className="nav-link" href="#">History</a>
                                 </li>
                                 <li className="nav-item">
-                                    <a className="nav-link" href={routes.transaction}>Make Payment</a>
+                                    <a className="nav-link" href={routes.transaction}>Payment</a>
                                 </li>
                                 <li className="nav-item">
-                                    <a className="nav-link" href="#">Bill Payments</a>
+                                    <a className="nav-link" href={routes.bills}>Bills</a>
                                 </li>
                                 <li className='nav-item'>
-                                    <a className="nav-link" href="#">Give Feedback</a>
+                                    <a className="nav-link" href="#">Feedback</a>
+                                </li> 
+                                <li className='nav-item'>
+                                    <a className="nav-link" href={routes.exchangeRates}>Exchange Rates</a>
                                 </li> 
                               </ul> 
+                            <button type='button' className='btn btn-primary ml-auto'>
+                                <Link to={routes.login} className='cls-white'>
+                                    Sign Out    
+                                </Link>
+                            </button>
                     </div> 
                 </div> 
             </nav>

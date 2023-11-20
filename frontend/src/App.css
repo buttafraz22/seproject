@@ -144,3 +144,8 @@ body{
 .landing{
   font-family: 'Rubik', sans-serif !important;
 }
+
+/*Buttons Styling*/
+.cls-white{
+  color : white !important;
+}
