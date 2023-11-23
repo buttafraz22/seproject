@@ -1,14 +1,17 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import Cookies from 'js-cookie'
+import { useNavigate } from 'react-router-dom';
+import routesPaths from '../router-config/routes-paths';
+
 
 export default function SendMoney() {
   const [accountName, setAccountName] = useState('');
-
   const [sendMoney, setSendMoney] = useState(0);
   const [accountNumber, setAccountNumber] = useState('');
   const userAccount = JSON.parse(Cookies.get('userBankingApp')).account
   const [userBalance, setUserBalance] = useState(userAccount.balance)
+  const navigate = useNavigate();
 
   /* useEffect(() => {
     // Fetch bank list from the API endpoint
@@ -53,7 +56,13 @@ export default function SendMoney() {
       balance : sendMoney
     }
 
-    const response = await axios.post('/route', bodyParameters, config)
+    const response = await axios.post('/transaction/', bodyParameters, config);
+    if (response.status === 201){
+      
+      navigate(routesPaths.userHome);
+    }else{
+      alert('Something went wrong. Try again!')
+    }
   };
 
   const validateBalance = () => {

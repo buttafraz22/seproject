@@ -3,8 +3,8 @@ const Account = require('../models/account');
 const mongoose = require('mongoose');
 
 const makeTransaction = async (req, res) => {
-    const session = await mongoose.startSession();
-    session.startTransaction();
+    /* const session = await mongoose.startSession();
+    session.startTransaction(); */
 
     try {
         const {
@@ -14,7 +14,7 @@ const makeTransaction = async (req, res) => {
             balance
         } = req.body;
 
-        const accountFromDb = await Account.findOne({ cnic: accountFrom });
+        const accountFromDb = await Account.findOne({ _id: accountFrom });
 
         if (!accountFromDb) return res.status(404).json({ message: 'Account Sender not found.' });
 
@@ -30,28 +30,28 @@ const makeTransaction = async (req, res) => {
         }
 
         const tran = new Transaction({
-            accountFrom: mongoose.Types.ObjectId(accountFromDb._id),
-            accountTo: mongoose.Types.ObjectId(accountToDb._id),
+            accountFrom: new mongoose.Types.ObjectId(accountFromDb._id),
+            accountTo: new mongoose.Types.ObjectId(accountToDb._id),
             balance: balance
         });
 
         accountFromDb.balance -= balance;
         accountToDb.balance += balance;
 
-        await accountFromDb.save({ session });
-        await accountToDb.save({ session });
-        await tran.save({ session });
+        await accountFromDb.save(/* { session } */);
+        await accountToDb.save(/* { session } */);
+        await tran.save(/* { session } */);
 
-        await session.commitTransaction();
-        session.endSession();
+        /* await session.commitTransaction();
+        session.endSession(); */
 
         return res.status(201).json({ message: 'Success' });
     } catch (err) {
-        await session.abortTransaction();
-        session.endSession();
+        /* await session.abortTransaction();
+        session.endSession(); */
         res.status(500).json({ error: err.message });
     }
 };
 
 
-module.exports = {makeTransaction}
+module.exports = { makeTransaction }
