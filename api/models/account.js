@@ -9,7 +9,8 @@ const acoountSchema = new mongoose.Schema({
         type:Number,
         required:true,
         minlength : 13,
-        maxlength : 13
+        maxlength : 13,
+        unique:true
     },
     cnicimages:[],
     username:{

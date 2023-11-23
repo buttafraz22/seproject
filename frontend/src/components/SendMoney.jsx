@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import Cookies from 'js-cookie'
 
-export default function SendMoney(){
+export default function SendMoney() {
   const [accountName, setAccountName] = useState('');
-  const [bankList, setBankList] = useState(['Meezan Bank', 'HBL']);
-  const [selectedBank, setSelectedBank] = useState('');
+
   const [sendMoney, setSendMoney] = useState(0);
   const [accountNumber, setAccountNumber] = useState('');
+  const userAccount = JSON.parse(Cookies.get('userBankingApp')).account
+  const [userBalance, setUserBalance] = useState(userAccount.balance)
 
   /* useEffect(() => {
     // Fetch bank list from the API endpoint
@@ -26,30 +28,64 @@ export default function SendMoney(){
     setAccountName(event.target.value);
   };
 
-  const handleBankChange = (event) => {
-    setSelectedBank(event.target.value);
-  };
 
-  const handleMoneyChange = (event) =>{
+  const handleMoneyChange = (event) => {
     setSendMoney(event.target.value);
   }
-  const handleAccountNuberChange = (event)=> {
+  const handleAccountNuberChange = (event) => {
     setAccountNumber(event.target.value);
   }
-  const handleSubmit = (event) => {
+  const handleSubmit = async(event) => {
     event.preventDefault();
     // Handle form submission (you can perform actions here)
-    console.log('Submitted Account Name:', accountName);
-    console.log('Selected Bank:', selectedBank);
+    if (!validateBalance) return;
+
+    // balance has been validated at this point, proceed to the backend request
+    const userDetails = JSON.parse(Cookies.get('userBankingApp'));
+
+    const config = {
+      headers: { Authorization: `Bearer ${userDetails.token}` },
+    };
+    const bodyParameters = {
+      accountFrom : userAccount._id,
+      accountTo : accountNumber,
+      accountToName : accountName,
+      balance : sendMoney
+    }
+
+    const response = await axios.post('/route', bodyParameters, config)
   };
+
+  const validateBalance = () => {
+    if(sendMoney > userBalance){
+      alert("You don't have enough money in your account");
+      return false;
+    }
+    return true;
+  }
 
   return (
     <>
       <h1 className='text-center mt-3'> Send Money to Account Holder</h1>
       <form className='form-money-transfer' onSubmit={handleSubmit}>
+
         <div className='row'>
           <div className="col-md-5">
-          <label htmlFor="accountName">Account Name:</label>
+            <label htmlFor="accountBalance">Your Balance:</label>
+          </div>
+          <div className='col-md-7'>
+            <input
+              type="text"
+              id="accountBalance"
+              value={userBalance}
+              readonly
+            />
+          </div>
+        </div>
+
+        <div className='row'>
+          <div className="col-md-5">
+            <label htmlFor="accountName">Account Name:</label>
           </div>
           <div className='col-md-7'>
             <input
@@ -63,7 +99,7 @@ export default function SendMoney(){
 
         <div className="row">
           <div className="col-md-5">
-          <label htmlFor="accountNumber">Account Number:</label>
+            <label htmlFor="accountNumber">Account CNIC:</label>
           </div>
           <div className="col-md-7 mr-auto">
             <input
@@ -74,27 +110,12 @@ export default function SendMoney(){
             />
           </div>
         </div>
-        <div className='select-bank row'>
-          <div className="col-md-5">
-            <label htmlFor="bank">Select Bank:</label>
-          </div>
-          <div className="col-md-7 mr-auto">
-            <select id="bank" value={selectedBank} onChange={handleBankChange}>
-              <option value="">Select a bank</option>
-              {bankList.map((bank, i) => (
-                <option key={i} value={bank.name}>  {/* yhan p id dalni ha key k btor */}
-                  {bank}
-                </option>
-              ))}
-            </select>
-          </div>
-        </div>
         <div className="row">
           <div className="col-md-5">
             Amount of Transfer Money
           </div>
           <div className="col-md-7">
-          <input
+            <input
               type="number"
               id="sendMoney"
               value={sendMoney}
@@ -102,8 +123,8 @@ export default function SendMoney(){
             />
           </div>
         </div>
-        <button className='btn btn-primary'type="submit">Send</button>
-    </form>
+        <button className='btn btn-primary' type="submit">Send</button>
+      </form>
     </>
   );
 };

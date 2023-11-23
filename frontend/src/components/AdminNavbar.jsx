@@ -1,6 +1,7 @@
 import React from 'react'
 import LogoFinal from '../assets/logo-final.png'
 import routes from '../router-config/routes-paths'
+import { Link } from 'react-router-dom'
 
 export default function AdminNavbar() {
     return (
@@ -20,6 +21,11 @@ export default function AdminNavbar() {
                                     <a className="nav-link" href={routes.accountCRUD}>Account Management</a>
                                 </li> 
                             </ul> 
+                            <button type='button' className='btn btn-info ml-auto'>
+                                <Link to={routes.login} className='cls-white'>
+                                    Sign Out    
+                                </Link>
+                            </button>
                     </div> 
                 </div> 
             </nav>

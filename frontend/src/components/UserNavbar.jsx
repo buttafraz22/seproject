@@ -33,7 +33,7 @@ export default function UserNavbar() {
                                     <a className="nav-link" href={routes.exchangeRates}>Exchange Rates</a>
                                 </li> 
                               </ul> 
-                            <button type='button' className='btn btn-primary ml-auto'>
+                            <button type='button' className='btn btn-info ml-auto'>
                                 <Link to={routes.login} className='cls-white'>
                                     Sign Out    
                                 </Link>

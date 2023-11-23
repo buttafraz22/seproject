@@ -2,6 +2,7 @@ const User = require("../models/user");
 const crypto = require("crypto");
 const UserAudit = require("../models/userAudit");
 const jwt = require('jsonwebtoken'); // Import the jwt library
+const Account = require('../models/account');
 
 
 /* CRUD Operations */
@@ -136,6 +137,7 @@ async function deleteUser(req, res) {
 
 const login = async(req, res) => {
   try {
+      /* console.log(req.body) */
       const { userName, password } = req.body;
       const user = await User.findOne({ userName });
       if (!user) return res.status(404).json({ error: 'User not found' });
@@ -146,14 +148,24 @@ const login = async(req, res) => {
       if (user.password !== hashedPassword) return res.status(401).json({ error: 'Invalid password, try again!!' });
       var token = GenerateToken(user);
       /* console.log(token) */
-
-      return res.status(200).json({
+      if(user.role === "admin"){
+        return res.status(200).json({
           message: 'Logged in successfully',
           username: userName,
           _id: user._id,
           role: user.role,
           token: token,
       });
+    }else{
+        return res.status(200).json({
+          message: 'Logged in successfully',
+          username: userName,
+          _id: user._id,
+          role: user.role,
+          token: token,
+          account : await Account.findOne({username : user.userName})
+      });
+    }
   } catch (err) {
       return res.status(500).json({ message: err });
   }

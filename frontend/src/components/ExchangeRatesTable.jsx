@@ -67,6 +67,7 @@ const ExchangeRatesTable = () => {
 
     return (
         <div className='bs mt-4'>
+            <h1 className='text-center mt-3'> Exchange Rates Module</h1>
             <div className='bs'>
                 <h2 className='ml-1'> Convert Rates</h2>
                 <div className="col-md-6">
@@ -131,7 +132,8 @@ const ExchangeRatesTable = () => {
             {/* Pagination buttons */}
             <div className='text-center my-auto'>
                 {Array.from({ length: totalPages }).map((_, index) => (
-                    <button key={index + 1} onClick={() => handlePageChange(index + 1)} className='btn btn-info mx-1'>
+                    <button key={index + 1} onClick={() => handlePageChange(index + 1)}
+                     className='btn btn-info mx-1'>
                         {index + 1}
                     </button>
                 ))}
