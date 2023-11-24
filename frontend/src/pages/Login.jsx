@@ -41,7 +41,7 @@ export default function LogIn() {
     event.preventDefault() 
     const data = new FormData(event.currentTarget) 
     // console.log(data.get('email'))
-    const response = axios.post(`/user/login`, {
+    const response = axios.post(`http://localhost:3005/user/login`, {
       userName : email,
       password : password
     })

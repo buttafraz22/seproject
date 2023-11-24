@@ -55,8 +55,8 @@ export default function SendMoney() {
       accountToName : accountName,
       balance : sendMoney
     }
-
-    const response = await axios.post('/transaction/', bodyParameters, config);
+    
+    const response = await axios.post('http://localhost:3005/transaction/', bodyParameters, config);
     if (response.status === 201){
       
       navigate(routesPaths.userHome);

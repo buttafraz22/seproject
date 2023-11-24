@@ -73,7 +73,9 @@ const ExchangeRatesTable = () => {
                 <div className="col-md-6">
                     <label className='m-3'>
                         Convert from:
-                        <select value={currencyFrom} onChange={handleCurrencyFromChange}>
+                        <select value={currencyFrom} onChange={handleCurrencyFromChange}
+                        className="btn btn-info selectpicker ml-2"
+                        data-style="btn-primary">
                             {Object.keys(rates).map((currency) => (
                                 <option key={currency} value={currency}>
                                     {currency}
@@ -86,7 +88,9 @@ const ExchangeRatesTable = () => {
                 <div className="col-md-6">
                     <label className='m-3'>
                         Convert to:
-                        <select value={currencyTo} onChange={handleCurrencyToChange}>
+                        <select value={currencyTo} onChange={handleCurrencyToChange}
+                         className="btn btn-info selectpicker ml-2"
+                         data-style="btn-primary">
                             {Object.keys(rates).map((currency) => (
                                 <option key={currency} value={currency}>
                                     {currency}

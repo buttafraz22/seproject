@@ -7,6 +7,7 @@ const cors = require('cors');
 const userRoute = require('./routes/userRoutes');
 const accountRoutes = require('./routes/accountRoutes');
 const transactionRoutes = require('./routes/transactionRoutes');
+const billRoutes = require('./routes/billRoute');
 
 
 const app = express();
@@ -20,6 +21,7 @@ app.get('/', (req, res) => {
 app.use('/user',userRoute);
 app.use('/account',accountRoutes);
 app.use('/transaction', transactionRoutes);
+app.use('/bill', billRoutes)
 
 
 
