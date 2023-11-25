@@ -21,7 +21,7 @@ const storage = multer.diskStorage({
         const uniqueFilename = Date.now() + file.originalname;
         cb(null, uniqueFilename);
     },
-});
+}); 
 
 const upload = multer({ storage });
 
@@ -31,15 +31,18 @@ const createAccount = async (req, res) => {
         upload.array('images',2)(req, res, async function (err) {
             if (err instanceof multer.MulterError) {
                 // Multer error occurred
+                console.error(err.message)
                 return res.status(500).json({ error: err.message });
             } else if (err) {
                 // Other errors
+                console.error(err.message)
                 return res.status(500).json({ error: err.message });
             }
 
             // File upload was successful
             // Extract data from the request body
             const { name, cnic, username, password,balance, images } = req.body;
+            console.log(req.body)
 
             /* console.log(req.body) */
 
@@ -74,6 +77,7 @@ const createAccount = async (req, res) => {
             res.status(201).json(savedAccount);
         });
     } catch (err) {
+        console.error(err)
         // Handle any other errors
         res.status(500).json({ error: "Backend error" });
     }

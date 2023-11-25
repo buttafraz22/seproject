@@ -4,6 +4,7 @@
 /*body styling*/
 body{
   font-family: 'Poppins',system-ui,-apple-system,Arial, Helvetica, sans-serif !important;
+  scroll-behavior: smooth;
 }
 .App-logo {
   height: 40vmin;
@@ -152,7 +153,7 @@ body{
 
 /*cards styling*/
 .card{
-  background-color:rgb(223, 220, 223) !important 
+  background-color:rgba(254, 254, 254, 0.665) !important 
 }
 
 /*footer styling*/

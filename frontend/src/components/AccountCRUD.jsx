@@ -2,6 +2,9 @@ import React, { useEffect, useState } from 'react';
 import { Button, Modal, Table, Form, Container, Row, Col } from 'react-bootstrap';
 import axios from 'axios';
 import Cookies from 'js-cookie';
+import routesPaths from '../router-config/routes-paths';
+import { useNavigate } from 'react-router-dom';
+
 
 const AccountCreationModal = ({ showModal, handleClose }) => {
   const [name, setName] = useState('');
@@ -10,6 +13,7 @@ const AccountCreationModal = ({ showModal, handleClose }) => {
   const [password, setPassword] = useState('');
   const [images, setImages] = useState(null);
   const [balance, setBalance] = useState(0);
+  const navigate = useNavigate();
 
   const resetStates = () => {
     setName('');
@@ -44,17 +48,20 @@ const AccountCreationModal = ({ showModal, handleClose }) => {
         headers: { Authorization: `Bearer ${userDetails.token}` },
       };
 
+      // console.log(formData)
+
       // Make a fetch request to send the data to the backend
       const response = await axios.post('http://localhost:3005/account', formData, config);
       if (response.status === 201) {
-        console.log('Account created successfully');
+        alert('Account created successfully');
         resetStates();
+        window.location.reload();
         handleClose(); // Close the modal after creating an account
       } else {
         console.error('Error creating account');
       }
     } catch (error) {
-      console.error('Error creating account:', error.message);
+      alert('Error creating account:'+ error.message);
     }
   };
 
@@ -162,6 +169,7 @@ const AccountTable = () => {
   const [editMode, setEditMode] = useState(null);
   const [updatedData, setUpdatedData] = useState({});
   const [toUpdateAccount, setToUpdateAccount] = useState(null);
+  
 
   const getDataFromBackend = async () => {
     try {
@@ -172,7 +180,7 @@ const AccountTable = () => {
       };
       const bodyParameters = {};
 
-      const response = await axios.get(`/account`, config);
+      const response = await axios.get(`http://localhost:3005/account`, config);
 
       if (response.data) {
         setAccounts(response.data);

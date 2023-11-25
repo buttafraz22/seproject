@@ -31,7 +31,6 @@ function requireRoles(roles) {
         } else {
             // User does not have any of the required roles, so send a forbidden response
             res.status(403).json({ message: 'Permission denied' });
-
         }
 
     };
