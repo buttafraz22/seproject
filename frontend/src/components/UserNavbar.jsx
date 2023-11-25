@@ -27,7 +27,7 @@ export default function UserNavbar() {
                                     <a className="nav-link" href={routes.bills}>Bills</a>
                                 </li>
                                 <li className='nav-item'>
-                                    <a className="nav-link" href="#">Feedback</a>
+                                    <a className="nav-link" href={routes.giveFeedback}>Feedback</a>
                                 </li> 
                                 <li className='nav-item'>
                                     <a className="nav-link" href={routes.exchangeRates}>Exchange Rates</a>

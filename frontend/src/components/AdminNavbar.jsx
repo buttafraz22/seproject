@@ -15,7 +15,7 @@ export default function AdminNavbar() {
                     <div className="collapse navbar-collapse" id="navbarNav">
                             <ul className="navbar-nav">
                                 <li className='nav-item'>
-                                    <a className="nav-link" href="#">Feedbacks</a>
+                                    <a className="nav-link" href={routes.displayFeedback}>Feedbacks</a>
                                 </li>
                                 <li className="nav-item">
                                     <a className="nav-link" href={routes.accountCRUD}>Account Management</a>

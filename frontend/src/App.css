@@ -149,3 +149,8 @@ body{
 .cls-white{
   color : white !important;
 }
+
+/*cards styling*/
+.card{
+  background-color:rgb(223, 220, 223) !important 
+}

@@ -11,6 +11,8 @@ import TransactionPage from './pages/TransactionPage'
 import AdminHome from './pages/AdminHome'
 import AdminAccountCRUD from './pages/AdminAccountCRUD'
 import ExchangeRates from './pages/ExchangeRates'
+import Feedback from './pages/Feedback'
+import AdminFeedbackDisplayes from './pages/adminFeedbackDisplayes'
 
 function App() {
   return (
@@ -27,6 +29,8 @@ function App() {
         <Route exact path={routes.adminHome} element={<AdminHome />}/>
         <Route exact path={routes.accountCRUD} element={<AdminAccountCRUD />}/>
         <Route exact path={routes.exchangeRates} element={<ExchangeRates />}/>
+        <Route exact path={routes.giveFeedback} element={<Feedback />}/>
+        <Route exact path={routes.displayFeedback} element={<AdminFeedbackDisplayes />}/>
       </Routes>
     </Router>
     </>
