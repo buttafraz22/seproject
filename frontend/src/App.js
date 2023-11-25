@@ -13,6 +13,7 @@ import AdminAccountCRUD from './pages/AdminAccountCRUD'
 import ExchangeRates from './pages/ExchangeRates'
 import Feedback from './pages/Feedback'
 import AdminFeedbackDisplayes from './pages/adminFeedbackDisplayes'
+import UserHome from './pages/UserHome'
 
 function App() {
   return (
@@ -22,7 +23,7 @@ function App() {
         <Route exact path='/' element={<LandingPage />}/>
         <Route exact path={routes.login} element={<LogIn />}/>
         <Route exact path={routes.register} element={<Register />}/>
-        <Route exact path={routes.userHome} element={<UserNavbar />}/>
+        <Route exact path={routes.userHome} element={<UserHome />}/>
         <Route exact path={routes.transaction} element={<MoneyDealing />}/>
         <Route exact path={routes.bills} element={<Bills />}/>
         <Route exact path={routes.transactionHistory} element={<TransactionPage />}/>

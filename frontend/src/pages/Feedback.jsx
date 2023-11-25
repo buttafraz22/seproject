@@ -6,6 +6,7 @@ import UserNavbar from '../components/UserNavbar';
 import Cookies from 'js-cookie';
 import { useNavigate } from 'react-router-dom';
 import routesPaths from '../router-config/routes-paths';
+import UserCarousel from '../components/CarouselUser';
 
 export default function Feedback() {
     const [content, setContent] = useState('');
