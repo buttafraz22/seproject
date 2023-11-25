@@ -5,7 +5,6 @@ const mongoose = require('mongoose');
 const makeTransaction = async (req, res) => {
     /* const session = await mongoose.startSession();
     session.startTransaction(); */
-
     try {
         const {
             accountFrom,
@@ -53,5 +52,31 @@ const makeTransaction = async (req, res) => {
     }
 };
 
+const getTransaction = async(req, res)=>{
+    try {
+        let { accountid } = req.params
+        
 
-module.exports = { makeTransaction }
+        const transactions = await Transaction.find({ accountFrom : accountid})
+        /* console.log(transactions)
+ */
+        const transactionsList = await Promise.all(transactions.map(async (tran) => {
+            const accountToInfo = await Account.findById(tran.accountTo);
+            return {
+              accountTo: tran.accountTo,
+              accountToName: accountToInfo.name,
+              balance: tran.balance,
+              date: tran.createdAt.toISOString().split('T')[0],
+            };
+          }));
+          
+          // Now you can use transactionsList as needed
+          
+
+        return res.status(200).json(transactionsList)
+    } catch (error) {
+        res.status(500).json({error : error.message})
+    }
+}
+
+module.exports = { makeTransaction, getTransaction }

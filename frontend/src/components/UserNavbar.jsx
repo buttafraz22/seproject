@@ -18,7 +18,7 @@ export default function UserNavbar() {
                                     <a className="nav-link" href={routes.userHome}>Home</a>
                                 </li> 
                                 <li className="nav-item">
-                                    <a className="nav-link" href="#">History</a>
+                                    <a className="nav-link" href={routes.transactionHistory}>History</a>
                                 </li>
                                 <li className="nav-item">
                                     <a className="nav-link" href={routes.transaction}>Payment</a>

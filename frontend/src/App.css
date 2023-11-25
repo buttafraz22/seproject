@@ -154,3 +154,14 @@ body{
 .card{
   background-color:rgb(223, 220, 223) !important 
 }
+
+/*footer styling*/
+#root {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh; /* This ensures the content takes at least the full height of the viewport */
+}
+footer{
+  padding: 1rem 0; /* Add some padding for better appearance */
+  margin-top: auto !important;
+}

@@ -9,5 +9,5 @@ module.exports = {
     'accountCRUD' : '/user/admin/account/manage',
     'exchangeRates' : '/user/client/exchange',
     'giveFeedback' : '/user/client/feedback',
-    'displayFeedback' : '/user/admin/feedback'
+    'displayFeedback' : '/user/admin/feedback',
 }

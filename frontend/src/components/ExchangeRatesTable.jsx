@@ -15,7 +15,6 @@ const ExchangeRatesTable = () => {
         const fetchData = () => {
             const currentDate = new Date().toISOString().split('T')[0];
 
-            // Replace 'YOUR_FIXER_IO_API_KEY' with your actual API key
             const apiUrl = `http://data.fixer.io/api/${currentDate}?base=EUR&access_key=c72fd99f19aba88d3e57d36751b193ac`;
 
             const response = axios.get(apiUrl);
@@ -26,7 +25,6 @@ const ExchangeRatesTable = () => {
                 if (success) {
                     // console.log(success.data)
                     setRates(success.data.rates)
-
                     // console.log(rates)
                 }
             }).catch(error => {

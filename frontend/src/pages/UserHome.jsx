@@ -1,6 +1,6 @@
-import React from 'react'
-import UserNavbar from '../components/UserNavbar'
-import UserCarousel from '../components/CarouselUser'
+import React from 'react';
+import UserNavbar from '../components/UserNavbar';
+import UserCarousel from '../components/CarouselUser';
 
 
 export default function UserHome() {
@@ -9,5 +9,5 @@ export default function UserHome() {
       <UserNavbar />
       <UserCarousel />
     </div>
-  )
+  );
 }
