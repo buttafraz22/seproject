@@ -7,6 +7,8 @@ let url = "mongodb://127.0.0.1:27017/bank-system";
 
 
 mongoose.connect(url)
+mongoose.set('bufferCommands', false);
+
 
 const db = mongoose.connection;
 
